@@ -15,6 +15,21 @@ package frc.robot;
 //testing push to github
 public final class Constants {
   public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
+
+    public static class DriveConstants {
+      public static final int kFrontLeftDrivePort = 1;
+      public static final int kBackLeftDrivePort = 3;
+      public static final int kFrontRightDrivePort = 2;
+      public static final int kBackRightDrivePort = 4;
+    }//***the numbers needs to be changed later
+
+    public static class ControllerConstants {
+      public static final int kXboxController1Port = 0;
+      public static final int kXboxController2Port = 1;
+    }
+  
+    public static class EncoderConstants{
+      public static final int kDriveEncoderConvFact = (int) (Math.PI*6/8.45);
+    }
   }
 }
