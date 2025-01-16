@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import com.kauailabs.navx.frc.AHRS;
+//import com.kauailabs.navx.frc.AHRS;
 
 
 import edu.wpi.first.wpilibj.SPI;
@@ -9,10 +9,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import com.revrobotics.spark;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase;
-import com.revrobotics.spark.config;
 
 
 
@@ -36,7 +35,7 @@ public class DriveSubsystem extends SubsystemBase {
   RelativeEncoder rightShootEncoder;
 
   // delcare gyro
-  AHRS gyro = new AHRS(SPI.Port.kMXP);
+  //AHRS gyro = new AHRS(SPI.Port.kMXP);
 
   DifferentialDrive m_robotDrive;
 
@@ -107,9 +106,9 @@ public class DriveSubsystem extends SubsystemBase {
     m_robotDrive.arcadeDrive(0,0);
   }
 
-  public void resetGyro(){
-    gyro.reset();
-  }
+  // public void resetGyro(){
+  //   gyro.reset();
+  // }
 
   public double getEncoderPosition(){
     return frontLeftEncoder.getPosition();
