@@ -2,7 +2,8 @@ package frc.robot.subsystems;
 
 //import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.SPI;
+//import edu.wpi.first.wpilibj.SPI;
+import com.revrobotics.CANSparkBase.IdleMode;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -12,6 +13,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkBase;
+import com.revrobotics.spark.config;
 
 
 
@@ -25,6 +27,9 @@ public class DriveSubsystem extends SubsystemBase {
   SparkMax backLeftDriveMotor = new SparkMax(Constants.DriveConstants.kBackLeftDrivePort, MotorType.kBrushless);
   SparkMax frontRightDriveMotor = new SparkMax(Constants.DriveConstants.kFrontRightDrivePort, MotorType.kBrushless);
   SparkMax backRightDriveMotor = new SparkMax(Constants.DriveConstants.kBackRightDrivePort, MotorType.kBrushless);
+
+  SparxMaxConfig configInvertTrue = new SparkMaxConfig();
+  SparxMaxConfig configInvertFalse = new SparkMaxConfig();
 
    //declare Encorders
   RelativeEncoder frontLeftEncoder;
@@ -42,6 +47,66 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Creates a new ExampleSubsystem. */
   public DriveSubsystem() {
+
+    // initialize motors
+    frontLeftDriveMotor.restoreFactoryDefaults();
+    frontRightDriveMotor.restoreFactoryDefaults();
+    backRightDriveMotor.restoreFactoryDefaults();
+    backLeftDriveMotor.restoreFactoryDefaults();
+    
+    // set motor idle mode to brake
+  
+    configInvertTrue
+      .inverted(true)
+      .idleMode(IdleMode.kBrake);
+    configInvertTrue.encoder
+      .positionConversionFactor(Constants.EncoderConstants.kDriveEncoderConvFact);
+    configInvertTrue.closedLoop
+      .rampRate(1);
+
+    frontLeftDriveMotor.setIdleMode(IdleMode.kBrake);
+    frontRightDriveMotor.setIdleMode(IdleMode.kBrake);
+    backRightDriveMotor.setIdleMode(IdleMode.kBrake);
+    backLeftDriveMotor.setIdleMode(IdleMode.kBrake);
+   
+    // set ramp rate to 1 s
+    frontLeftDriveMotor.setClosedLoopRampRate(1);
+    frontRightDriveMotor.setClosedLoopRampRate(1);
+    backRightDriveMotor.setClosedLoopRampRate(1);
+    backLeftDriveMotor.setClosedLoopRampRate(1);
+
+    // initialize encoders
+    backLeftEncoder = backLeftDriveMotor.getEncoder(Type.kHallSensor, 42);
+    backRightEncoder = backRightDriveMotor.getEncoder(Type.kHallSensor, 42);
+    frontLeftEncoder = frontLeftDriveMotor.getEncoder(Type.kHallSensor, 42);
+    frontRightEncoder = frontRightDriveMotor.getEncoder(Type.kHallSensor, 42);
+
+    // set for the wheel motors as we want to know the positions
+    //  PI * WheelDiameter / GearRatio --WheelDiameter is in inches
+    frontLeftEncoder.setPositionConversionFactor(Math.PI*6/8.45);
+    frontRightEncoder.setPositionConversionFactor(Math.PI*6/8.45);
+    backLeftEncoder.setPositionConversionFactor(Math.PI*6/8.45);
+    backRightEncoder.setPositionConversionFactor(Math.PI*6/8.45);
+    
+      // set leader/followers - this connects the front and back motors to drive together
+    backLeftDriveMotor.follow(frontLeftDriveMotor);
+    backRightDriveMotor.follow(frontRightDriveMotor);
+    //.
+
+    // set motor inversion (may not have to do this - test without it later)
+    frontLeftDriveMotor.setInverted(true);
+    backLeftDriveMotor.setInverted(true);
+    frontRightDriveMotor.setInverted(false);
+    backRightDriveMotor.setInverted(false); // have to do seperate for each motor
+
+      // burn settings into memory
+    frontLeftDriveMotor.burnFlash();
+    frontRightDriveMotor.burnFlash();
+    backRightDriveMotor.burnFlash();
+    backLeftDriveMotor.burnFlash();
+        
+    m_robotDrive = new DifferentialDrive(frontLeftDriveMotor,frontRightDriveMotor); //all motors connected
+
  
   }
 
