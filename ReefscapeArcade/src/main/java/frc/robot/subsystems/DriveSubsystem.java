@@ -1,20 +1,20 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+
 //import com.kauailabs.navx.frc.AHRS;
 
 //import edu.wpi.first.wpilibj.SPI;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
+
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkBase;
-import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.SparkClosedLoopController;
 
 
 
@@ -31,6 +31,8 @@ public class DriveSubsystem extends SubsystemBase {
 
   SparkMaxConfig configInvertTrue = new SparkMaxConfig();
   SparkMaxConfig configInvertFalse = new SparkMaxConfig();
+
+
 
    //declare Encorders
   RelativeEncoder frontLeftEncoder;
@@ -49,12 +51,7 @@ public class DriveSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   public DriveSubsystem() {
 
-    // initialize motors
-    frontLeftDriveMotor.restoreFactoryDefaults();
-    frontRightDriveMotor.restoreFactoryDefaults();
-    backRightDriveMotor.restoreFactoryDefaults();
-    backLeftDriveMotor.restoreFactoryDefaults();
-    
+   
     // set motor idle mode to brake
   
     configInvertTrue
@@ -62,8 +59,9 @@ public class DriveSubsystem extends SubsystemBase {
       .idleMode(IdleMode.kBrake);
     configInvertTrue.encoder
       .positionConversionFactor(Constants.EncoderConstants.kDriveEncoderConvFact);
-    configInvertTrue.closedLoop
-    .setClosedLoopRampRate(1);
+      configInvertTrue.closedLoop
+      .pid(0,0,1);
+      
 
    // hello
 
@@ -73,20 +71,16 @@ public class DriveSubsystem extends SubsystemBase {
     configInvertTrue.encoder
       .positionConversionFactor(Constants.EncoderConstants.kDriveEncoderConvFact);
     configInvertTrue.closedLoop
-    .setClosedLoopRampRate(1);
+    .pid(0,0,1);
     
-frontLeftDriveMotor.configure(configInvertTrue, null, null);
+frontLeftDriveMotor.configure(ResetMode.kResetSafeParameters, PersistMode.kPersistParameters,configInvertTrue, null, null);
 backLeftDriveMotor.configure(configInvertTrue, null, null);
 frontRightDriveMotor.configure(configInvertFalse, null, null);
 backRightDriveMotor.configure(configInvertFalse, null, null);
 
    
    
-    // set ramp rate to 1 s
-    frontLeftDriveMotor.setClosedLoopRampRate(1);
-    frontRightDriveMotor.setClosedLoopRampRate(1);
-    backRightDriveMotor.setClosedLoopRampRate(1);
-    backLeftDriveMotor.setClosedLoopRampRate(1);
+    
 
     // initialize encoders
     backLeftEncoder = backLeftDriveMotor.getEncoder(Type.kHallSensor, 42);
