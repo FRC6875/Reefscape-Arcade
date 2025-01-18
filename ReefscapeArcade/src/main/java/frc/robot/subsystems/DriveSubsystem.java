@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
@@ -10,6 +11,7 @@ import com.revrobotics.spark.SparkMax;
 //import edu.wpi.first.wpilibj.SPI;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -52,18 +54,20 @@ public class DriveSubsystem extends SubsystemBase {
   public DriveSubsystem() {
 
    
-    // set motor idle mode to brake
+    // config for inverted motors
   
     configInvertTrue
       .inverted(true)
       .idleMode(IdleMode.kBrake);
+
     configInvertTrue.encoder
       .positionConversionFactor(Constants.EncoderConstants.kDriveEncoderConvFact);
       configInvertTrue.closedLoop
       .pid(0,0,1);
+
       
 
-   // hello
+   // config for non-inverted motors
 
     configInvertFalse
       .inverted(false)
@@ -73,10 +77,11 @@ public class DriveSubsystem extends SubsystemBase {
     configInvertTrue.closedLoop
     .pid(0,0,1);
     
-frontLeftDriveMotor.configure(ResetMode.kResetSafeParameters, PersistMode.kPersistParameters,configInvertTrue, null, null);
-backLeftDriveMotor.configure(configInvertTrue, null, null);
-frontRightDriveMotor.configure(configInvertFalse, null, null);
-backRightDriveMotor.configure(configInvertFalse, null, null);
+    //configure motors (burnFlash and restoreFactoryDefaults)
+frontLeftDriveMotor.configure(configInvertTrue,ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+backLeftDriveMotor.configure(configInvertTrue, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+frontRightDriveMotor.configure(configInvertFalse, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+backRightDriveMotor.configure(configInvertFalse, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
    
    
@@ -96,11 +101,7 @@ backRightDriveMotor.configure(configInvertFalse, null, null);
     backRightDriveMotor.follow(frontRightDriveMotor);
     //.
 
-      // burn settings into memory
-    frontLeftDriveMotor.burnFlash();
-    frontRightDriveMotor.burnFlash();
-    backRightDriveMotor.burnFlash();
-    backLeftDriveMotor.burnFlash();
+      
         
     m_robotDrive = new DifferentialDrive(frontLeftDriveMotor,frontRightDriveMotor); //all motors connected
 
