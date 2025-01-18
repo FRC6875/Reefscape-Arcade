@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.RelativeEncoder.Type;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -31,9 +32,10 @@ public class DriveSubsystem extends SubsystemBase {
   SparkMax frontRightDriveMotor = new SparkMax(Constants.DriveConstants.kFrontRightDrivePort, MotorType.kBrushless);
   SparkMax backRightDriveMotor = new SparkMax(Constants.DriveConstants.kBackRightDrivePort, MotorType.kBrushless);
 
-  SparkMaxConfig configInvertTrue = new SparkMaxConfig();
-  SparkMaxConfig configInvertFalse = new SparkMaxConfig();
-
+  SparkMaxConfig configFrontLeft = new SparkMaxConfig();
+  SparkMaxConfig configBackLeft = new SparkMaxConfig();
+  SparkMaxConfig configFrontRight = new SparkMaxConfig();
+  SparkMaxConfig configBackRight = new SparkMaxConfig();
 
 
    //declare Encorders
@@ -53,35 +55,48 @@ public class DriveSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   public DriveSubsystem() {
 
-   
-    // config for inverted motors
-  
-    configInvertTrue
+   //configure motors
+
+    configFrontLeft
       .inverted(true)
       .idleMode(IdleMode.kBrake);
 
-    configInvertTrue.encoder
+    configFrontLeft.encoder
       .positionConversionFactor(Constants.EncoderConstants.kDriveEncoderConvFact);
-      configInvertTrue.closedLoop
+    configFrontLeft.closedLoop
       .pid(0,0,1);
 
-      
-
-   // config for non-inverted motors
-
-    configInvertFalse
+    configFrontRight
       .inverted(false)
       .idleMode(IdleMode.kBrake);
-    configInvertTrue.encoder
+    configFrontRight.encoder
       .positionConversionFactor(Constants.EncoderConstants.kDriveEncoderConvFact);
-    configInvertTrue.closedLoop
+    configFrontRight.closedLoop
+    .pid(0,0,1);
+
+    configBackLeft
+    .inverted(true)
+    .idleMode(IdleMode.kBrake)
+    .follow(frontLeftDriveMotor);
+  configBackLeft.encoder
+    .positionConversionFactor(Constants.EncoderConstants.kDriveEncoderConvFact);
+  configBackLeft.closedLoop
+    .pid(0,0,1);
+
+    configBackRight
+    .inverted(false)
+    .idleMode(IdleMode.kBrake)
+    .follow(frontRightDriveMotor);
+  configBackLeft.encoder
+    .positionConversionFactor(Constants.EncoderConstants.kDriveEncoderConvFact);
+  configBackLeft.closedLoop
     .pid(0,0,1);
     
     //configure motors (burnFlash and restoreFactoryDefaults)
-frontLeftDriveMotor.configure(configInvertTrue,ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-backLeftDriveMotor.configure(configInvertTrue, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-frontRightDriveMotor.configure(configInvertFalse, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-backRightDriveMotor.configure(configInvertFalse, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+frontLeftDriveMotor.configure(configFrontLeft,ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+backLeftDriveMotor.configure(configBackLeft, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+frontRightDriveMotor.configure(configFrontRight, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+backRightDriveMotor.configure(configBackRight, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
    
    
@@ -92,16 +107,7 @@ backRightDriveMotor.configure(configInvertFalse, ResetMode.kResetSafeParameters,
     backRightEncoder = backRightDriveMotor.getEncoder(Type.kHallSensor, 42);
     frontLeftEncoder = frontLeftDriveMotor.getEncoder(Type.kHallSensor, 42);
     frontRightEncoder = frontRightDriveMotor.getEncoder(Type.kHallSensor, 42);
-
-    
-    
-  
-      // set leader/followers - this connects the front and back motors to drive together
-    backLeftDriveMotor.follow(frontLeftDriveMotor);
-    backRightDriveMotor.follow(frontRightDriveMotor);
-    //.
-
-      
+     
         
     m_robotDrive = new DifferentialDrive(frontLeftDriveMotor,frontRightDriveMotor); //all motors connected
 
