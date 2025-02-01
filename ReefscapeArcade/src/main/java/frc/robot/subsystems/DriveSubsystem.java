@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.RelativeEncoder.Type;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -103,10 +103,10 @@ backRightDriveMotor.configure(configBackRight, ResetMode.kResetSafeParameters, P
     
 
     // initialize encoders
-    backLeftEncoder = backLeftDriveMotor.getEncoder(Type.kHallSensor, 42);
-    backRightEncoder = backRightDriveMotor.getEncoder(Type.kHallSensor, 42);
-    frontLeftEncoder = frontLeftDriveMotor.getEncoder(Type.kHallSensor, 42);
-    frontRightEncoder = frontRightDriveMotor.getEncoder(Type.kHallSensor, 42);
+    backLeftEncoder = backLeftDriveMotor.getEncoder();
+    backRightEncoder = backRightDriveMotor.getEncoder();
+    frontLeftEncoder = frontLeftDriveMotor.getEncoder();
+    frontRightEncoder = frontRightDriveMotor.getEncoder();
      
         
     m_robotDrive = new DifferentialDrive(frontLeftDriveMotor,frontRightDriveMotor); //all motors connected
