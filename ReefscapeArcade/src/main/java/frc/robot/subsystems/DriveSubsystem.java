@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.RelativeEncoder;
-
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -12,7 +11,6 @@ import com.revrobotics.spark.SparkMax;
 //import edu.wpi.first.wpilibj.SPI;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.config.SparkBaseConfig;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -103,11 +101,11 @@ backRightDriveMotor.configure(configBackRight, ResetMode.kResetSafeParameters, P
     
 
     // initialize encoders
-     backLeftEncoder = backLeftDriveMotor.getEncoder(Type.kHallSensor, 42);
+    backLeftEncoder = backLeftDriveMotor.getEncoder(Type.kHallSensor, 42);
     backRightEncoder = backRightDriveMotor.getEncoder(Type.kHallSensor, 42);
     frontLeftEncoder = frontLeftDriveMotor.getEncoder(Type.kHallSensor, 42);
     frontRightEncoder = frontRightDriveMotor.getEncoder(Type.kHallSensor, 42);
-   
+     
         
     m_robotDrive = new DifferentialDrive(frontLeftDriveMotor,frontRightDriveMotor); //all motors connected
 
