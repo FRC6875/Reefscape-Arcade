@@ -8,11 +8,13 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.Autos;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.commands.Seq_ElevatorAuto;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -23,20 +25,29 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final DriveSubsystem m_robotDrive = new DriveSubsystem();
 
+  // The robot's subsystems and commands are defined here...
+  public final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
+
+  private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  private final Seq_ElevatorAuto m_Seq_ElevatorAuto = new Seq_ElevatorAuto(m_elevatorSubsystem);
+  
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(ControllerConstants.kXboxController1Port);
 
       // A chooser for autonomous commands
   SendableChooser<Command> m_chooser = new SendableChooser<>();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
   
     // Configure the trigger bindings
     configureBindings();
+
+    m_chooser.addOption("Elevator Test Auto",m_Seq_ElevatorAuto);
+
+    SmartDashboard.putData("Auto Chooser", m_chooser);
   }
 
   /**
