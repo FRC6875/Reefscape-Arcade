@@ -11,6 +11,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.XboxController;
@@ -48,6 +49,14 @@ public class RobotContainer {
     m_chooser.addOption("Elevator Test Auto",m_Seq_ElevatorAuto);
 
     SmartDashboard.putData("Auto Chooser", m_chooser);
+
+     m_robotDrive.setDefaultCommand(
+        // A split-stick arcade command, with forward/backward controlled by the left
+        // hand, and turning controlled by the right.
+        Commands.run(
+            () ->
+                m_robotDrive.drive((m_driverController.getLeftY())*0.5, m_driverController.getLeftX()), m_robotDrive));
+
   }
 
   /**
