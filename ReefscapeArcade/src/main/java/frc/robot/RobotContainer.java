@@ -34,9 +34,8 @@ public class RobotContainer {
   private final Seq_ElevatorAuto m_Seq_ElevatorAuto = new Seq_ElevatorAuto(m_elevatorSubsystem);
   
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(ControllerConstants.kXboxController1Port);
-
+  private final CommandXboxController m_driverController = new CommandXboxController(ControllerConstants.kXboxController1Port);
+ 
       // A chooser for autonomous commands
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -55,7 +54,7 @@ public class RobotContainer {
         // hand, and turning controlled by the right.
         Commands.run(
             () ->
-                m_robotDrive.drive((m_driverController.getLeftY())*0.5, m_driverController.getLeftX()), m_robotDrive));
+                m_robotDrive.drive((m_driverController.getLeftY()), m_driverController.getLeftX()), m_robotDrive));
 
   }
 
