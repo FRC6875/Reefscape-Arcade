@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.commands.AutoElevatorCommand;
 import frc.robot.commands.Autos;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -28,7 +29,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
-  public final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
+  public final static ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
 
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final Seq_ElevatorAuto m_Seq_ElevatorAuto = new Seq_ElevatorAuto(m_elevatorSubsystem);
@@ -48,10 +49,12 @@ public class RobotContainer {
     m_chooser.addOption("Elevator Test Auto",m_Seq_ElevatorAuto);
 
     SmartDashboard.putData("Auto Chooser", m_chooser);
+    m_driverController.x().onTrue(new AutoElevatorCommand(m_elevatorSubsystem, -16.0, "down"));
 
      m_robotDrive.setDefaultCommand(
         // A split-stick arcade command, with forward/backward controlled by the left
         // hand, and turning controlled by the right.
+       
         Commands.run(
             () ->
                 m_robotDrive.drive((m_driverController.getLeftY()), m_driverController.getLeftX()), m_robotDrive));

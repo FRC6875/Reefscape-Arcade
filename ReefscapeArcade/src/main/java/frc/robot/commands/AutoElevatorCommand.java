@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.ElevatorSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -20,6 +21,7 @@ public class AutoElevatorCommand extends Command {
     m_dist = dist;
     m_direction = direction;
 
+  addRequirements(RobotContainer.m_elevatorSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -32,7 +34,7 @@ public class AutoElevatorCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_elevatorSubsystem.setSpeed(0.5, m_direction);
+    m_elevatorSubsystem.setSpeed(0.1);
     //run motor in specified direction
   
   }
@@ -50,9 +52,17 @@ public class AutoElevatorCommand extends Command {
     //check if encoder value is greater than or equal to distance inputted
     
     //without tolerance
+    if(m_direction.equals("up")){
     if(m_elevatorSubsystem.getEncoderValue()>=m_dist)return true;
     else return false;
-
+    }
+    else if(m_direction.equals("down")){
+      if(m_elevatorSubsystem.getEncoderValue()<=m_dist)return true;
+    else return false;
+    }
+    else{
+      return true;
+    }
     // 2 is the tolerance
    // if(Math.abs(m_elevatorSubsystem.getEncoderValue() - m_dist) < 0.5) return true;
    // else return false;

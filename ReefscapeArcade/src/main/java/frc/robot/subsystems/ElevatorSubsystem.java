@@ -7,27 +7,24 @@
 // Natalie's test comment
 package frc.robot.subsystems;
 
-import frc.robot.MechanismConstants;
-import frc.robot.MechanismConstants.ElevatorConstants;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-
-import java.lang.reflect.Type;
-
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
-import com.revrobotics.spark.config.SparkBaseConfig;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.MechanismConstants.ElevatorConstants;
 
 public class ElevatorSubsystem extends SubsystemBase {
   SparkMax elevatorMotor = new SparkMax(ElevatorConstants.kElevatorPort, MotorType.kBrushless);
   SparkMaxConfig config = new SparkMaxConfig();
   RelativeEncoder elevatorEncoder = elevatorMotor.getEncoder(); //42
-  
+  SparkClosedLoopController elevatorController = elevatorMotor.getClosedLoopController();
+
 
 
   /** Creates a new ElevatorSubsystem. */
@@ -38,17 +35,22 @@ public class ElevatorSubsystem extends SubsystemBase {
     .idleMode(IdleMode.kBrake);
     config.encoder
     .positionConversionFactor(ElevatorConstants.kElevatorEncoderConvFact);
-    // config.closedLoop
-    // .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-    // .pid(1.0, 0.0, 0.0);
+    config.closedLoop
+    .p(1.0)
+    .i(0)
+    .d(0)
+    .outputRange(-0.3, 0.3);
 
+    resetEncoder();
   }
-
+public void runToPosition(double position){
+elevatorController.setReference(position, SparkBase.ControlType.kPosition);
+}
 
   public void resetEncoder(){
     elevatorMotor.getEncoder().setPosition(0);
   }
-
+  
   public double getEncoderValue(){
     return elevatorMotor.getEncoder().getPosition();
   }
@@ -57,21 +59,36 @@ public class ElevatorSubsystem extends SubsystemBase {
     elevatorMotor.stopMotor();
   }
 
-  public void setSpeed(double speed, String direction) {
+  public void setSpeed(double speed) {
 
-    if (direction.equals("up")) {
       elevatorMotor.set(speed);
-    } 
-    else if (direction.equals("down")) {
-    elevatorMotor.set(speed*-1);
     }
-  }
+//  public void moveToPosition(variable for distance if possible ){
+//  run motor at desired speed
+//  if encoder get position is at whatever coral level
+//    stop motor
+// }
+  
+
+ /* public void moveToPosition(double distance,String direction){
+    elevatorMotor.set(0.5);
+    if(elevatorEncoder.getPosition() >= distance){
+      elevatorMotor.stopMotor();
+    }
+    
+
+  } */
+//  run motor at desired speed
+//  if encoder get position is at whatever coral level
+//    stop motor
+// }
 
 
 
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("Elevator position",getEncoderValue());
     // This method will be called once per scheduler run
   }
 }
