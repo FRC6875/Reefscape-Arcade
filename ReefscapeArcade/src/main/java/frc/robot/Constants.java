@@ -23,6 +23,18 @@ public final class Constants {
       public static final int kBackRightDrivePort = 4;
     }//***the numbers needs to be changed later
 
+    public static class IntakeConstants {
+      public static final int kLeftIntakePort = 7;
+      public static final int kRightIntakePort = 8;
+      public static final int kIntakeSensorPort = 0;
+    }
+
+    public static class ShootConstants {
+      public static final int kLeftShootPort =6;
+      public static final int kRightShootPort = 10;
+      public static final int kLeftshootPort2 = 5;
+      public static final int kRightShootPort2 = 9;
+    }
     public static class ControllerConstants {
       public static final int kXboxController1Port = 0;
       public static final int kXboxController2Port = 1;

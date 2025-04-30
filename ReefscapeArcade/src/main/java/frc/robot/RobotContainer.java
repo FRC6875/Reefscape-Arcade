@@ -6,17 +6,18 @@ package frc.robot;
 
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.commands.AutoElevatorCommand;
-import frc.robot.commands.Autos;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.commands.TeleopIntakeCommand;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ShootSubsystem;
+import frc.robot.commands.TeleopShootCommand;
+
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.Seq_ElevatorAuto;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -29,14 +30,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
-  public final static ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
 
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
-  private final Seq_ElevatorAuto m_Seq_ElevatorAuto = new Seq_ElevatorAuto(m_elevatorSubsystem);
+  private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
+  private final ShootSubsystem m_shootSubsystem = new ShootSubsystem();
+
   
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController = new CommandXboxController(ControllerConstants.kXboxController1Port);
- 
+  private final CommandXboxController m_controller2 = new CommandXboxController(ControllerConstants.kXboxController2Port);
+
       // A chooser for autonomous commands
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -46,10 +49,8 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
 
-    m_chooser.addOption("Elevator Test Auto",m_Seq_ElevatorAuto);
-
+  
     SmartDashboard.putData("Auto Chooser", m_chooser);
-    m_driverController.x().onTrue(new AutoElevatorCommand(m_elevatorSubsystem, -16.0, "down"));
 
      m_robotDrive.setDefaultCommand(
         // A split-stick arcade command, with forward/backward controlled by the left
@@ -71,6 +72,10 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    
+    m_controller2.a().whileTrue(new TeleopIntakeCommand(m_intakeSubsystem));
+    m_controller2.x().whileTrue(new TeleopShootCommand(m_shootSubsystem));
+
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     // new Trigger(m_exampleSubsystem::exampleCondition)
     //     .onTrue(new ExampleCommand(m_exampleSubsystem));
